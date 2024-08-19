@@ -24,6 +24,7 @@ import { login } from '@/actions/login';
 import { LoginSchema } from '../../schemas';
 
 const LoginForm = () => {
+  const [success, setSuccess] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
 
@@ -43,10 +44,12 @@ const LoginForm = () => {
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError('');
+    setSuccess('');
 
     startTransition(() => {
       login(values).then((data) => {
         setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
@@ -103,7 +106,7 @@ const LoginForm = () => {
             />
           </div>
 
-          <FormSuccess />
+          <FormSuccess message={success} />
           <FormError message={error || urlError} />
 
           <Button

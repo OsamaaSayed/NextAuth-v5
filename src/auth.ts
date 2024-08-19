@@ -35,17 +35,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return session;
     },
-    // async signIn({ user }) {
-    //   if (user.id) {
-    //     const existingUser = await getUserById(user.id);
+    async signIn({ user, account }) {
+      // Allow OAuth without email verification
+      if (account?.provider !== 'credentials') return true;
 
-    //     if (!existingUser || !existingUser.emailVerified) {
-    //       return false;
-    //     }
-    //   }
+      if (user.id) {
+        const existingUser = await getUserById(user.id);
 
-    //   return true;
-    // },
+        if (!existingUser?.emailVerified) return false;
+      }
+
+      // TODO : ADD 2FA check
+
+      return true;
+    },
   },
   events: {
     async linkAccount({ user }) {
