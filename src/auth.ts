@@ -14,28 +14,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
   ...authConfig,
   callbacks: {
-    async jwt({ token }) {
-      if (!token.sub) return token;
-
-      const existingUser = await getUserById(token.sub);
-      if (!existingUser) return token;
-
-      token.role = existingUser.role;
-
-      return token;
-    },
-    async session({ token, session }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
-
-      if (token.role && session.user) {
-        session.user.role = token.role;
-      }
-
-      return session;
-    },
     async signIn({ user, account }) {
+      console.log('🚀 ~ signIn ~ signIn:', signIn);
       // Allow OAuth without email verification
       if (account?.provider !== 'credentials') return true;
 
@@ -49,9 +29,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       return true;
     },
+    async jwt({ token }) {
+      console.log('🚀 ~ jwt ~ jwt:');
+      if (!token.sub) return token;
+
+      const existingUser = await getUserById(token.sub);
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
+
+      return token;
+    },
+    async session({ token, session }) {
+      console.log('🚀 ~ session ~ session:');
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role;
+      }
+
+      return session;
+    },
   },
   events: {
     async linkAccount({ user }) {
+      console.log('🚀 ~ linkAccount ~ linkAccount:');
       await db.user.update({
         where: { id: user.id },
         data: { emailVerified: new Date() },
