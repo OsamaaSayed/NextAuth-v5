@@ -5,11 +5,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
 
 import CardWrapper from './card-wrapper';
-import { confirmVerification } from '@/actions/new-verification';
 import FormSuccess from '../form-success';
 import FormError from '../form-error';
 
-const NewVerificationForm = () => {
+import { confirmVerification } from '@/actions/confirm-verification';
+
+const ConfirmVerification = () => {
   const [success, setSuccess] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
 
@@ -52,4 +53,4 @@ const NewVerificationForm = () => {
   );
 };
 
-export default NewVerificationForm;
+export default ConfirmVerification;
